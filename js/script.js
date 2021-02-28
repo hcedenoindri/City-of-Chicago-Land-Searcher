@@ -67,6 +67,16 @@ fetch("https://data.cityofchicago.org/resource/aksk-kvfp.json")
 
 });
 
+// map
+let map;
+function initMap() {
+    let mapProp = {
+        center: new google.maps.LatLng(41.88145468743958, -87.63328143107563),
+        zoom: 11,
+    };
+    map = new google.maps.Map(document.querySelector('#googleMap'), mapProp);
+}
+
 // data
 let results = document.querySelector('#results');
 let row = document.querySelector("#resultsRow");
@@ -82,18 +92,29 @@ fetch("https://data.cityofchicago.org/resource/aksk-kvfp.json")
     card_body.querySelector(".card-subtitle").innerHTML = land.address + " - " + land.sq_ft; 
     card_body.querySelector(".card-text").innerHTML = land.pin;
     results.append(new_card);
+
+    let marker = new google.maps.Marker({ 
+      position: new google.maps.LatLng(land.latitude, land.longitude)
+    });
+    marker.setMap(map);
+
+
   }
   
+
 });
 
-// map
-function initMap() {
-    let mapProp = {
-        center: new google.maps.LatLng(51.508742, -0.120850),
-        zoom: 5,
-    };
-    let map = new google.maps.Map(document.querySelector('#googleMap'), mapProp);
-}
+let map_ref = document.querySelector('#map-ref');
+map_ref.addEventListener('click', handler = () => {
+  let cont = document.querySelectorAll('.nav-link')[3];
+  let elem = cont.getAttribute("value");
+  let active = document.querySelector('.active');
+  active.classList.remove("active");
+  cont.classList.add("active");    
+  show(elem);
+});
+
+
 
 let endpoint = "https://data.cityofchicago.org/resource/aksk-kvfp.json";
 document.querySelector("#search").addEventListener ("click", (e) => {
@@ -111,18 +132,41 @@ document.querySelector("#search").addEventListener ("click", (e) => {
   });
   results.append(row);
 
+  map = null;
+  initMap();
+
   fetch(url)
   .then ( (response) => { return response.json() })
   .then ( (result) => {
-
+    let flag= false;
     results.querySelector('.row').remove();
     for( let land of result) {
-        let new_card = row.cloneNode(true);
-        let card_body = new_card.querySelector('.card-body');
-        card_body.querySelector(".card-title").innerHTML = land.community_area_name + " - " + land.pin;
-        card_body.querySelector(".card-subtitle").innerHTML = land.address + " - " + land.sq_ft; 
-        card_body.querySelector(".card-text").innerHTML = land.pin;
-        results.append(new_card);
+      let new_card = row.cloneNode(true);
+      let card_body = new_card.querySelector('.card-body');
+      card_body.querySelector(".card-title").innerHTML = land.community_area_name + " - " + land.pin;
+      card_body.querySelector(".card-subtitle").innerHTML = land.address + " - " + land.sq_ft; 
+      card_body.querySelector(".card-text").innerHTML = land.pin;
+      results.append(new_card);
+      
+      let marker = new google.maps.Marker({ 
+        position: new google.maps.LatLng(land.latitude, land.longitude)
+      });
+      marker.setMap(map);
+
+      if (result.length <= 20) {
+        let info_card = new_card.cloneNode(true);
+        let infowindow = new google.maps.InfoWindow({
+          content: info_card
+        });
+        infowindow.open(map, marker);
+      }
+      else {
+        flag = true;
+      }
+
+    }
+    if (flag) {
+      alert("Too many results. Info windows not shown on map");
     }
 
     let cont = document.querySelectorAll('.nav-link')[2];
