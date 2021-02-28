@@ -1,7 +1,7 @@
 {
     "name": "Chicago City-Owned Land Searcher",
-    "theme_color": "##c0e6f5",
-    "background_color": "##c0e6f5",
+    "theme_color": "#c0e6f5",
+    "background_color": "#c0e6f5",
     "display": "standalone",
     "scope": "./",
     "start_url": "./",
