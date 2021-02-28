@@ -127,17 +127,19 @@ document.querySelector("#search").addEventListener ("click", (e) => {
   let sp = new URLSearchParams(fd);
   let url = endpoint +  "?" + sp.toString();
 
-  results.querySelectorAll('.row').forEach( (row) => {
-      row.remove();
-  });
-  results.append(row);
 
-  map = null;
-  initMap();
 
   fetch(url)
   .then ( (response) => { return response.json() })
   .then ( (result) => {
+    results.querySelectorAll('.row').forEach( (row) => {
+      row.remove();
+    });
+    results.append(row);
+
+    map = null;
+    initMap();
+    
     let flag= false;
     results.querySelector('.row').remove();
     for( let land of result) {
