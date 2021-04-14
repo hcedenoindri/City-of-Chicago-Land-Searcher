@@ -98,9 +98,7 @@ fetch("https://data.cityofchicago.org/resource/aksk-kvfp.json")
     });
     marker.setMap(map);
 
-
   }
-  
 
 });
 
@@ -154,23 +152,16 @@ document.querySelector("#search").addEventListener ("click", (e) => {
         position: new google.maps.LatLng(land.latitude, land.longitude)
       });
       marker.setMap(map);
-
-      if (result.length <= 20) {
-        let info_card = new_card.cloneNode(true);
-        let infowindow = new google.maps.InfoWindow({
-          content: info_card
-        });
+     
+      let info_card = new_card.cloneNode(true);
+      let infowindow = new google.maps.InfoWindow({
+        content: info_card
+      });
+      marker.addListener("click", () => {
         infowindow.open(map, marker);
-      }
-      else {
-        flag = true;
-      }
-
+      });
+     
     }
-    if (flag) {
-      alert("Too many results. Info windows not shown on map");
-    }
-
     let cont = document.querySelectorAll('.nav-link')[2];
     let elem = cont.getAttribute("value");
     let active = document.querySelector('.active');
@@ -183,7 +174,7 @@ document.querySelector("#search").addEventListener ("click", (e) => {
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+    navigator.serviceWorker.register('./sw.js').then(function(registration) {
       // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
     }, function(err) {
