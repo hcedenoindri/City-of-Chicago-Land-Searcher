@@ -97,7 +97,8 @@ fetch("https://data.cityofchicago.org/resource/aksk-kvfp.json")
       position: new google.maps.LatLng(land.latitude, land.longitude)
     });
     marker.setMap(map);
-
+    
+    let info_card = new_card.cloneNode(true);
     let infowindow = new google.maps.InfoWindow({
       content: info_card
     });
