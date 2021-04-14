@@ -1,4 +1,4 @@
-$("#menu-toggle").click(function(e) {
+$("#menu-toggle").click((e) => {
   e.preventDefault();
   $("#wrapper").toggleClass("toggled");
 });
@@ -98,8 +98,13 @@ fetch("https://data.cityofchicago.org/resource/aksk-kvfp.json")
     });
     marker.setMap(map);
 
+    let infowindow = new google.maps.InfoWindow({
+      content: info_card
+    });
+    marker.addListener("click", () => {
+      infowindow.open(map, marker);
+    });
   }
-
 });
 
 let map_ref = document.querySelector('#map-ref');
@@ -124,8 +129,6 @@ document.querySelector("#search").addEventListener ("click", (e) => {
   let fd = new FormData(f);
   let sp = new URLSearchParams(fd);
   let url = endpoint +  "?" + sp.toString();
-
-
 
   fetch(url)
   .then ( (response) => { return response.json() })
